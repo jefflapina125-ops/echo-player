@@ -1,13 +1,13 @@
 {
-  "name": "Echo Player",
-  "short_name": "Echo",
-  "description": "Your offline-only music player.",
+  "name": "Mellow",
+  "short_name": "Mellow",
+  "description": "Your offline music player.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0B0B0E",
-  "theme_color": "#0B0B0E",
+  "background_color": "#121212",
+  "theme_color": "#121212",
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
