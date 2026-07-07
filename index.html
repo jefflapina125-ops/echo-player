@@ -162,6 +162,8 @@ nav#bottom-nav button.active .gi{transform:scale(1.1);}
 #sync-btn{position:fixed;right:84px;bottom:calc(var(--nav-h) + 20px);z-index:56;width:42px;height:42px;border-radius:50%;background:var(--card);border:1px solid var(--line);color:var(--text-dim);font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,0.35);transition:bottom .36s var(--ease),transform .14s var(--spring);}
 #sync-btn.mini-up{bottom:calc(var(--nav-h) + var(--mini-h) + 20px);}
 #sync-btn:active{transform:scale(0.88);}
+body:has(#view-songlist.active) #fab,
+body:has(#view-songlist.active) #sync-btn{display:none!important;}
 
 /* ── FULL PLAYER (Image 2 style) ── */
 #player-overlay{
