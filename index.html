@@ -670,12 +670,16 @@ function loadAndPlay(){
   const id=queue[queueIndex];const s=songById(id);if(!s)return;
   if(currentObjUrl)URL.revokeObjectURL(currentObjUrl);
   currentObjUrl=URL.createObjectURL(s.blob);
-  audio.src=currentObjUrl;audio.play().catch(()=>{});
+  audio.src=currentObjUrl;
+  audio.load();
+  audio.play().catch(()=>{});
   updateNowPlayingUI(s,true);
-  // pulse art
   const art=document.getElementById("po-art");
   art.classList.add("pop");setTimeout(()=>art.classList.remove("pop"),300);
-  renderAll();saveLastPlayed();
+  // update playing highlight without full re-render (preserves scroll)
+  document.querySelectorAll(".song-row.playing").forEach(r=>r.classList.remove("playing"));
+  document.querySelectorAll(`.song-row[data-id="${id}"]`).forEach(r=>r.classList.add("playing"));
+  saveLastPlayed();
 }
 function playNext(manual){
   if(!queue.length)return;
@@ -697,8 +701,7 @@ audio.addEventListener("timeupdate",()=>{
   document.getElementById("mini-progress").style.width=pct+"%";
   document.getElementById("t-cur").textContent=fmtTime(audio.currentTime);
   document.getElementById("t-dur").textContent=fmtTime(audio.duration);
-});
-document.getElementById("seek").addEventListener("input",e=>{if(isFinite(audio.duration))audio.currentTime=(e.target.value/100)*audio.duration;});
+});document.getElementById("seek").addEventListener("input",e=>{if(isFinite(audio.duration))audio.currentTime=(e.target.value/100)*audio.duration;});
 ["mini-playpause","playpause-btn"].forEach(id=>document.getElementById(id).addEventListener("click",togglePlayPause));
 document.getElementById("mini-next").addEventListener("click",()=>playNext(true));
 document.getElementById("next-btn").addEventListener("click",()=>playNext(true));
@@ -1006,7 +1009,7 @@ function renderAll(){
 const LS_LAST="mellow_last";
 function saveLastPlayed(){if(queueIndex<0||!queue.length)return;const id=queue[queueIndex];const s=songById(id);if(!s)return;try{localStorage.setItem(LS_LAST,JSON.stringify({id,time:audio.currentTime||0,queue:queue.slice(),queueIndex}));}catch(e){}}
 async function restoreLastPlayed(){try{const raw=localStorage.getItem(LS_LAST);if(!raw)return;const saved=JSON.parse(raw);const s=songById(saved.id);if(!s)return;queue=saved.queue.filter(id=>songById(id));queueIndex=Math.min(saved.queueIndex,queue.length-1);if(queueIndex<0)return;if(currentObjUrl)URL.revokeObjectURL(currentObjUrl);currentObjUrl=URL.createObjectURL(s.blob);audio.src=currentObjUrl;audio.currentTime=saved.time||0;updateNowPlayingUI(s,false);document.getElementById("t-cur").textContent=fmtTime(saved.time||0);}catch(e){}}
-audio.addEventListener("timeupdate",()=>{if(Math.floor(audio.currentTime)%5===0)saveLastPlayed();});
+// save on visibility change only
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")saveLastPlayed();});
 
 // ── Back button ──
